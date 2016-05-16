@@ -2,6 +2,7 @@ package com.cjburkey.comprazip;
 
 import java.awt.Toolkit;
 import java.io.File;
+import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -49,9 +50,14 @@ public class Scenes {
 		viewScene = new Scene(root);
 		HBox buttons = defaultHBox();
 		Button upLevel = new Button("^");
+		Button newZip = new Button("Open File");
 		
-		buttons.getChildren().addAll(upLevel);
+		buttons.getChildren().addAll(upLevel, newZip);
 		root.getChildren().addAll(buttons, list);
+		
+		newZip.setOnAction(e -> {
+			showFileChooser();
+		});
 		
 		upLevel.setOnAction(e -> {
 			Util.currentDir = new ZFile(Util.currentDir, true).getParent();
@@ -69,14 +75,21 @@ public class Scenes {
 	
 	private static final void showFileChooser() {
 		FileChooser ch = new FileChooser();
-		ExtensionFilter zipFilter = new ExtensionFilter("Zip Files (*.zip)", "*.zip");
+		ExtensionFilter zipFilter = new ExtensionFilter("Compressed Files (*.zip, *.jar, *.rar)", new ArrayList<String>(){
+			private static final long serialVersionUID = -1252262948127098519L;
+			{
+				add("*.zip");
+				add("*.jar");
+				add("*.rar");
+		}});
 		
 		ch.setTitle("Choose Zip");
 		ch.setInitialDirectory(new File(System.getProperty("user.home")));
 		ch.getExtensionFilters().add(zipFilter);
 		File f = ch.showOpenDialog(CompraZip.getStage());
 		if(f != null) {
-			try {
+			try {				
+				Util.files = null;
 				Util.zip = f;
 				CompraZip.viewScene();
 			} catch (Exception e1) {
