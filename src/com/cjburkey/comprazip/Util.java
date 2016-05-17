@@ -10,4 +10,8 @@ public class Util {
 	public static int totalFiles = 0;
 	public static ArrayList<ZFile> files;
 	
+	public static final String getCurrentParent() {
+		return new ZFile(Util.currentDir, true, null).getParent();
+	}
+	
 }

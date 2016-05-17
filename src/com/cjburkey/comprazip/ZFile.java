@@ -1,17 +1,25 @@
 package com.cjburkey.comprazip;
 
+import java.util.zip.ZipEntry;
+
 public class ZFile {
 	
 	private String path;
 	private boolean dir;
+	private ZipEntry entry;
 
-	public ZFile(String pathname, boolean dir) {
+	public ZFile(String pathname, boolean dir, ZipEntry entry) {
 		this.path = pathname;
 		this.dir = dir;
+		this.entry = entry;
 	}
 	
 	public boolean isDirectory() {
 		return this.dir;
+	}
+	
+	public ZipEntry getEntry() {
+		return this.entry;
 	}
 	
 	public String getParent() {

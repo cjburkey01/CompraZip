@@ -3,6 +3,7 @@ package com.cjburkey.comprazip;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.zip.ZipEntry;
+import com.cjburkey.comprazip.settings.Settings;
 import com.cjburkey.comprazip.zip.ZipLoader;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -39,6 +40,11 @@ public class CompraZip extends Application {
 	}
 	
 	public static final void setScene(Scene scene) {
+		if(!Boolean.parseBoolean(Settings.get("useDarkTheme", "false"))) {
+			scene.getStylesheets().add("css/JMetroLightTheme.css");
+		} else {
+			scene.getStylesheets().add("css/JMetroDarkTheme.css");
+		}
 		s.setScene(scene);
 	}
 	
@@ -47,7 +53,7 @@ public class CompraZip extends Application {
 			if(Util.files == null) {
 				Util.files = new ArrayList<ZFile>();
 				for(ZipEntry e : ZipLoader.getZipEntries(Util.zip)) {
-					Util.files.add(new ZFile(e.toString(), e.isDirectory()));
+					Util.files.add(new ZFile(e.toString(), e.isDirectory(), e));
 				}
 			}
 			
@@ -59,6 +65,7 @@ public class CompraZip extends Application {
 			SortedList<ZFile> sort = new SortedList<ZFile>(file);
 			sort.setComparator(comparator);
 			Scenes.list.setItems(sort);
+			Scenes.upLevel.setDisable(Util.currentDir == Util.getCurrentParent());
 			setScene(Scenes.viewScene);
 		} catch (Exception e) {
 			error(e);

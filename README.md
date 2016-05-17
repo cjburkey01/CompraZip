@@ -1,6 +1,10 @@
 # CompraZip
 An extremely simple zip-viewer made in Java
 
+## Can I use your code?
+* Sure!
+* But, make sure to give credit according to the **MIT** license which can be found in the *LICENSE* file. 
+
 ## Why use this?
 * It's free.
 * It's easy to understand.
