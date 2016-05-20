@@ -4,12 +4,14 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.util.ArrayList;
 import com.cjburkey.comprazip.settings.Settings;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -43,15 +45,20 @@ public class Scenes {
 		homeScene = new Scene(root);
 		Button openZip = new Button("Open File");
 		Button settings = new Button("Settings");
+		Button exit = new Button("Quit");
 		
-		root.getChildren().addAll(openZip, settings);
+		root.getChildren().addAll(openZip, settings, exit);
+		
+		openZip.setOnAction(e -> {
+			showFileChooser();
+		});
 		
 		settings.setOnAction(e -> {
 			CompraZip.setScene(settingsScene);
 		});
 		
-		openZip.setOnAction(e -> {
-			showFileChooser();
+		exit.setOnAction(e -> {
+			Platform.exit();
 		});
 	}
 	
@@ -68,7 +75,7 @@ public class Scenes {
 		
 		back.setOnAction(e -> { CompraZip.setScene(homeScene); });
 		
-		useDarkTheme.setOnAction(e -> { Settings.set("useDarkTheme", "" + useDarkTheme.isSelected()); });
+		useDarkTheme.setOnAction(e -> { Settings.set("useDarkTheme", "" + useDarkTheme.isSelected()); CompraZip.setScene(CompraZip.getStage().getScene()); });
 	}
 	
 	private static final void viewScene() {
@@ -96,7 +103,7 @@ public class Scenes {
 		
 		list.setOnMouseClicked(e -> {
 			ZFile selected = list.getSelectionModel().getSelectedItem();
-			if(e.getClickCount() == 2 && selected != null && selected.isDirectory()) {
+			if(e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2 && selected != null && selected.isDirectory()) {
 				Util.currentDir = selected.toString();
 				CompraZip.viewScene();
 			}
@@ -119,9 +126,7 @@ public class Scenes {
 		File f = ch.showOpenDialog(CompraZip.getStage());
 		if(f != null) {
 			try {				
-				Util.files = null;
-				Util.zip = f;
-				CompraZip.viewScene();
+				CompraZip.openFile(f);
 			} catch (Exception e1) {
 				CompraZip.error(e1);
 			}

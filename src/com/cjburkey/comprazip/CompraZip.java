@@ -1,5 +1,6 @@
 package com.cjburkey.comprazip;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.zip.ZipEntry;
@@ -40,6 +41,7 @@ public class CompraZip extends Application {
 	}
 	
 	public static final void setScene(Scene scene) {
+		scene.getStylesheets().clear();
 		if(!Boolean.parseBoolean(Settings.get("useDarkTheme", "false"))) {
 			scene.getStylesheets().add("css/JMetroLightTheme.css");
 		} else {
@@ -79,6 +81,12 @@ public class CompraZip extends Application {
 		System.err.println("--[END ERR]--");
 		
 		Platform.exit();
+	}
+	
+	public static final void openFile(File f) {
+		Util.files = null;
+		Util.zip = f;
+		CompraZip.viewScene();
 	}
 	
 	public static final Stage getStage() { return s; }
